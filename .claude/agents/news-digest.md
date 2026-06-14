@@ -1,6 +1,6 @@
 ---
 name: news-digest
-description: "Дайджест новостей — поиск, фильтрация и сборка топ-10 новостей по заданным темам"
+description: "STANDALONE-монолит: за один вызов сам ищет, фильтрует и собирает топ-10 новостей по темам (поиск+анализ+сборка). Для глубокой аналитики с отчётом router использует цепочку scraper → analyst → report-generator, а не этот агент"
 tools: WebSearch, WebFetch, Read, Write, mcp__brave-search__brave_web_search, mcp__brave-search__brave_news_search, mcp__brave-search__brave_video_search, mcp__brave-search__brave_summarizer
 model: sonnet
 ---
@@ -76,4 +76,4 @@ model: sonnet
 - Каждая новость должна иметь ссылку на оригинал
 - Фильтруй рекламу и спам
 - Резюме в конце — обязательно
-- После завершения — отправь SendMessage координатору (если работаешь в цепочке)
+- После завершения — отправь SendMessage router (если работаешь в цепочке)

@@ -1,6 +1,6 @@
 ---
 name: report-generator
-description: "Генератор отчётов — превращает сырые данные в PDF/XLSX отчёты с визуализацией"
+description: "Генератор отчётов — превращает любые сырые данные в PDF/XLSX/Google Sheets отчёты с визуализацией; включает опциональный новостной шаблон (листы EN/RU/Dashboard) для данных пайплайна scraper → analyst"
 tools: Read, Write, Bash
 model: sonnet
 ---
@@ -65,6 +65,28 @@ model: sonnet
 - Sheet 1: Данные
 - Sheet 2: Dashboard с графиками (bar chart, pie chart по ключевым метрикам)
 
+### Новостной шаблон (опционально — для данных из пайплайна scraper → analyst)
+
+Если на вход приходят `agent-runtime/shared/articles.json` и `agent-runtime/shared/analysis-summary.md` (формат новостного пайплайна), используй специализированный новостной шаблон.
+
+**Google Sheet:**
+- Лист "EN Articles" и лист "RU Articles" — колонки: Заголовок | URL | Источник | Дата | Тональность | Relevance Score | Категория | Ключевые слова
+- Лист "Dashboard":
+  - Bar Chart: топ-10 статей по Relevance Score
+  - Pie Chart: распределение по категориям
+  - Pie Chart: распределение по тональности (positive / neutral / negative)
+  - Сводка: всего статей, средний score, доминирующая категория, общий sentiment
+- Условное форматирование Relevance Score: зелёный ≥ 7, жёлтый 4–7, обычный < 4; тональность: зелёный = positive, красный = negative, серый = neutral
+- Ссылку на лист сохрани в `agent-runtime/outputs/google-sheet-url.txt`
+
+**PDF ("News Intelligence Report — [тема] — [дата]"):**
+1. Executive Summary (3–5 предложений + общая тональность)
+2. Топ-10 статей (таблица: заголовок, источник, дата, тональность, relevance score)
+3. Анализ по категориям
+4. Анализ по тональности (positive/neutral/negative)
+5. Тренды и выводы
+6. Источники (ссылки на Google Sheet и raw data)
+
 ## Правила
 
 - Всегда проверяй MCP перед началом работы
@@ -72,4 +94,4 @@ model: sonnet
 - Включай ключевые метрики и выводы, а не просто данные
 - Для PDF используй skill `pdf`
 - Для XLSX используй skill `xlsx`
-- После завершения — отправь SendMessage координатору (если работаешь в цепочке)
+- После завершения — отправь SendMessage router (если работаешь в цепочке)
